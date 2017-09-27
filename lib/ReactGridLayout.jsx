@@ -37,6 +37,7 @@ export type Props = {
   isDraggable: boolean,
   isResizable: boolean,
   useCSSTransforms: boolean,
+  allowOverlap: boolean,
 
   // Callbacks
   onLayoutChange: (Layout) => void,
@@ -116,6 +117,9 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     isResizable: PropTypes.bool,
     // Use CSS transforms instead of top/left
     useCSSTransforms: PropTypes.bool,
+
+    // If true, the layout will allow grid items to overlap
+    allowOverlap: PropTypes.bool,
 
     //
     // Callbacks
@@ -273,7 +277,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     };
 
     // Move the element to the dragged location.
-    layout = moveElement(layout, l, x, y, true /* isUserAction */);
+    layout = moveElement(layout, l, x, y, true /* isUserAction */, this.props.allowOverlap || false);
 
     this.props.onDrag(layout, oldDragItem, l, placeholder, e, node);
 
@@ -298,7 +302,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     if (!l) return;
 
     // Move the element here
-    layout = moveElement(layout, l, x, y, true /* isUserAction */);
+    layout = moveElement(layout, l, x, y, true /* isUserAction */, this.props.allowOverlap || false);
 
     this.props.onDragStop(layout, oldDragItem, l, null, e, node);
 
