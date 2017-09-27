@@ -68,13 +68,14 @@ var ResponsiveReactGridLayout = function (_React$Component) {
         breakpoints = _props.breakpoints,
         layouts = _props.layouts,
         verticalCompact = _props.verticalCompact,
-        cols = _props.cols;
+        cols = _props.cols,
+        allowOverlap = _props.allowOverlap;
 
     var breakpoint = (0, _responsiveUtils.getBreakpointFromWidth)(breakpoints, width);
     var colNo = (0, _responsiveUtils.getColsFromBreakpoint)(breakpoint, cols);
     // Get the initial layout. This can tricky; we try to generate one however possible if one doesn't exist
     // for this layout.
-    var initialLayout = (0, _responsiveUtils.findOrGenerateResponsiveLayout)(layouts, breakpoints, breakpoint, breakpoint, colNo, verticalCompact);
+    var initialLayout = (0, _responsiveUtils.findOrGenerateResponsiveLayout)(layouts, breakpoints, breakpoint, breakpoint, colNo, verticalCompact, allowOverlap);
 
     return {
       layout: initialLayout,
@@ -99,7 +100,7 @@ var ResponsiveReactGridLayout = function (_React$Component) {
         // Since we're setting an entirely new layout object, we must generate a new responsive layout
         // if one does not exist.
 
-        var newLayout = (0, _responsiveUtils.findOrGenerateResponsiveLayout)(nextProps.layouts, nextProps.breakpoints, _breakpoint, _breakpoint, _cols, nextProps.verticalCompact);
+        var newLayout = (0, _responsiveUtils.findOrGenerateResponsiveLayout)(nextProps.layouts, nextProps.breakpoints, _breakpoint, _breakpoint, _cols, nextProps.verticalCompact, nextProps.allowOverlap);
         this.setState({ layout: newLayout });
       }
   };
@@ -115,7 +116,8 @@ var ResponsiveReactGridLayout = function (_React$Component) {
     var breakpoints = nextProps.breakpoints,
         cols = nextProps.cols,
         layouts = nextProps.layouts,
-        verticalCompact = nextProps.verticalCompact;
+        verticalCompact = nextProps.verticalCompact,
+        allowOverlap = nextProps.allowOverlap;
 
     var newBreakpoint = nextProps.breakpoint || (0, _responsiveUtils.getBreakpointFromWidth)(nextProps.breakpoints, nextProps.width);
 
@@ -128,10 +130,10 @@ var ResponsiveReactGridLayout = function (_React$Component) {
 
       // Find or generate a new layout.
       var newCols = (0, _responsiveUtils.getColsFromBreakpoint)(newBreakpoint, cols);
-      var _layout = (0, _responsiveUtils.findOrGenerateResponsiveLayout)(layouts, breakpoints, newBreakpoint, lastBreakpoint, newCols, verticalCompact);
+      var _layout = (0, _responsiveUtils.findOrGenerateResponsiveLayout)(layouts, breakpoints, newBreakpoint, lastBreakpoint, newCols, verticalCompact, allowOverlap);
 
       // This adds missing items.
-      _layout = (0, _utils.synchronizeLayoutWithChildren)(_layout, nextProps.children, newCols, verticalCompact);
+      _layout = (0, _utils.synchronizeLayoutWithChildren)(_layout, nextProps.children, newCols, verticalCompact, allowOverlap);
 
       // Store the new layout.
       layouts[newBreakpoint] = _layout;

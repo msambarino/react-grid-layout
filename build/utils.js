@@ -109,7 +109,7 @@ function collides(l1, l2, allowOverlap) {
  *   vertically.
  * @return {Array}       Compacted Layout.
  */
-function compact(layout, verticalCompact) {
+function compact(layout, verticalCompact, allowOverlap) {
   // Statics go in the compareWith array right away so items flow around them.
   var compareWith = getStatics(layout);
   // We go through the items by row and column.
@@ -122,7 +122,7 @@ function compact(layout, verticalCompact) {
 
     // Don't move static elements
     if (!l.static) {
-      l = compactItem(compareWith, l, verticalCompact);
+      l = compactItem(compareWith, l, verticalCompact, allowOverlap);
 
       // Add to comparison array. We only collide with items before this one.
       // Statics are already in this array.
@@ -142,7 +142,7 @@ function compact(layout, verticalCompact) {
 /**
  * Compact an item in the layout.
  */
-function compactItem(compareWith, l, verticalCompact) {
+function compactItem(compareWith, l, verticalCompact, allowOverlap) {
   if (verticalCompact) {
     // Bottom 'y' possible is the bottom of the layout.
     // This allows you to do nice stuff like specify {y: Infinity}
@@ -150,14 +150,14 @@ function compactItem(compareWith, l, verticalCompact) {
     l.y = Math.min(bottom(compareWith), l.y);
 
     // Move the element up as far as it can go without colliding.
-    while (l.y > 0 && !getFirstCollision(compareWith, l)) {
+    while (l.y > 0 && !getFirstCollision(compareWith, l, allowOverlap)) {
       l.y--;
     }
   }
 
   // Move it down, and keep moving it down if it's colliding.
   var collides = void 0;
-  while (collides = getFirstCollision(compareWith, l)) {
+  while (collides = getFirstCollision(compareWith, l, allowOverlap)) {
     l.y = collides.y + collides.h;
   }
   return l;
@@ -169,7 +169,7 @@ function compactItem(compareWith, l, verticalCompact) {
  * @param  {Array} layout Layout array.
  * @param  {Number} bounds Number of columns.
  */
-function correctBounds(layout, bounds) {
+function correctBounds(layout, bounds, allowOverlap) {
   var collidesWith = getStatics(layout);
   for (var _i4 = 0, len = layout.length; _i4 < len; _i4++) {
     var l = layout[_i4];
@@ -183,7 +183,7 @@ function correctBounds(layout, bounds) {
     if (!l.static) collidesWith.push(l);else {
       // If this is static and collides with other statics, we must move it down.
       // We have to do something nicer than just letting them overlap.
-      while (getFirstCollision(collidesWith, l)) {
+      while (getFirstCollision(collidesWith, l, allowOverlap)) {
         l.y++;
       }
     }
@@ -396,7 +396,7 @@ function sortLayoutItemsByRowCol(layout) {
  * @param  {Boolean} verticalCompact Whether or not to compact the layout vertically.
  * @return {Array}                Working layout.
  */
-function synchronizeLayoutWithChildren(initialLayout, children, cols, verticalCompact) {
+function synchronizeLayoutWithChildren(initialLayout, children, cols, verticalCompact, allowOverlap) {
   initialLayout = initialLayout || [];
 
   // Generate one layout item per child.
@@ -428,8 +428,8 @@ function synchronizeLayoutWithChildren(initialLayout, children, cols, verticalCo
   });
 
   // Correct the layout.
-  layout = correctBounds(layout, { cols: cols });
-  layout = compact(layout, verticalCompact);
+  layout = correctBounds(layout, { cols: cols }, allowOverlap);
+  layout = compact(layout, verticalCompact, allowOverlap);
 
   return layout;
 }

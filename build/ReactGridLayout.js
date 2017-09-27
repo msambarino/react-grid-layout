@@ -82,7 +82,7 @@ var ReactGridLayout = function (_React$Component) {
 
     // We need to regenerate the layout.
     if (newLayoutBase) {
-      var newLayout = (0, _utils.synchronizeLayoutWithChildren)(newLayoutBase, nextProps.children, nextProps.cols, nextProps.verticalCompact);
+      var newLayout = (0, _utils.synchronizeLayoutWithChildren)(newLayoutBase, nextProps.children, nextProps.cols, nextProps.verticalCompact, nextProps.allowOverlap);
       var _oldLayout = this.state.layout;
       this.setState({ layout: newLayout });
       this.onLayoutMaybeChanged(newLayout, _oldLayout);
@@ -155,7 +155,7 @@ var ReactGridLayout = function (_React$Component) {
     this.props.onDrag(layout, oldDragItem, l, placeholder, e, node);
 
     this.setState({
-      layout: (0, _utils.compact)(layout, this.props.verticalCompact),
+      layout: (0, _utils.compact)(layout, this.props.verticalCompact, this.props.allowOverlap),
       activeDrag: placeholder
     });
   };
@@ -185,7 +185,7 @@ var ReactGridLayout = function (_React$Component) {
     this.props.onDragStop(layout, oldDragItem, l, null, e, node);
 
     // Set state
-    var newLayout = (0, _utils.compact)(layout, this.props.verticalCompact);
+    var newLayout = (0, _utils.compact)(layout, this.props.verticalCompact, this.props.allowOverlap);
     var oldLayout = this.state.oldLayout;
 
     this.setState({
@@ -244,7 +244,7 @@ var ReactGridLayout = function (_React$Component) {
 
     // Re-compact the layout and set the drag placeholder.
     this.setState({
-      layout: (0, _utils.compact)(layout, this.props.verticalCompact),
+      layout: (0, _utils.compact)(layout, this.props.verticalCompact, this.props.allowOverlap),
       activeDrag: placeholder
     });
   };
@@ -261,7 +261,7 @@ var ReactGridLayout = function (_React$Component) {
     this.props.onResizeStop(layout, oldResizeItem, l, null, e, node);
 
     // Set state
-    var newLayout = (0, _utils.compact)(layout, this.props.verticalCompact);
+    var newLayout = (0, _utils.compact)(layout, this.props.verticalCompact, this.props.allowOverlap);
     var oldLayout = this.state.oldLayout;
 
     this.setState({
@@ -525,6 +525,7 @@ ReactGridLayout.defaultProps = {
   isResizable: true,
   useCSSTransforms: true,
   verticalCompact: true,
+  allowOverlap: false,
   onLayoutChange: noop,
   onDragStart: noop,
   onDrag: noop,
@@ -537,7 +538,7 @@ ReactGridLayout.defaultProps = {
 var _initialiseProps = function _initialiseProps() {
   this.state = {
     activeDrag: null,
-    layout: (0, _utils.synchronizeLayoutWithChildren)(this.props.layout, this.props.children, this.props.cols, this.props.verticalCompact),
+    layout: (0, _utils.synchronizeLayoutWithChildren)(this.props.layout, this.props.children, this.props.cols, this.props.verticalCompact, this.props.allowOverlap),
     mounted: false,
     oldDragItem: null,
     oldLayout: null,

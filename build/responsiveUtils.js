@@ -54,7 +54,7 @@ function getColsFromBreakpoint(breakpoint, cols) {
  *   vertically.
  * @return {Array}             New layout.
  */
-function findOrGenerateResponsiveLayout(layouts, breakpoints, breakpoint, lastBreakpoint, cols, verticalCompact) {
+function findOrGenerateResponsiveLayout(layouts, breakpoints, breakpoint, lastBreakpoint, cols, verticalCompact, allowOverlap) {
   // If it already exists, just return it.
   if (layouts[breakpoint]) return (0, _utils.cloneLayout)(layouts[breakpoint]);
   // Find or generate the next layout
@@ -69,7 +69,7 @@ function findOrGenerateResponsiveLayout(layouts, breakpoints, breakpoint, lastBr
     }
   }
   layout = (0, _utils.cloneLayout)(layout || []); // clone layout so we don't modify existing items
-  return (0, _utils.compact)((0, _utils.correctBounds)(layout, { cols: cols }), verticalCompact);
+  return (0, _utils.compact)((0, _utils.correctBounds)(layout, { cols: cols }, allowOverlap), verticalCompact, allowOverlap);
 }
 
 /**
