@@ -215,7 +215,7 @@ function getLayoutItem(layout, id) {
 function getFirstCollision(layout, layoutItem, allowOverlap) {
   if (allowOverlap) return undefined;
   for (var _i6 = 0, len = layout.length; _i6 < len; _i6++) {
-    if (collides(layout[_i6], layoutItem), allowOverlap) return layout[_i6];
+    if (collides(layout[_i6], layoutItem, allowOverlap)) return layout[_i6];
   }
 }
 
@@ -315,13 +315,13 @@ function moveElementAwayFromCollision(layout, collidesWith, itemToMove, isUserAc
     };
     fakeItem.y = Math.max(collidesWith.y - itemToMove.h, 0);
     if (!getFirstCollision(layout, fakeItem, allowOverlap)) {
-      return moveElement(layout, itemToMove, undefined, fakeItem.y, allowOverlap);
+      return moveElement(layout, itemToMove, undefined, fakeItem.y, undefined, allowOverlap);
     }
   }
 
   // Previously this was optimized to move below the collision directly, but this can cause problems
   // with cascading moves, as an item may actually leapfrog a collision and cause a reversal in order.
-  return moveElement(layout, itemToMove, undefined, itemToMove.y + 1, allowOverlap);
+  return moveElement(layout, itemToMove, undefined, itemToMove.y + 1, undefined, allowOverlap);
 }
 
 /**
